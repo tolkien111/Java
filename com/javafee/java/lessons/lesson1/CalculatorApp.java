@@ -5,7 +5,7 @@ public class CalculatorApp {
     public static void main(String[] args) {
 
         CalculatorController calculatorController = new CalculatorController();
-        calculatorController.startingApplication();
+        calculatorController.startApplication();
 
 
     }

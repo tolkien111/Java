@@ -26,6 +26,7 @@ public class CalculatorView {
                         subtraction -> -
                         multiplication -> *
                         division -> /
+                        end of program -> exit
                         """;
         System.out.println(operator);
     }

@@ -7,13 +7,9 @@ public class CalculatorModel {
     private float firstNumber;
     private float secondNumber;
 
-
-    public CalculatorModel() {
-    }
-
     public static float doMathOperation(String operation, float firstNumber, float secondNumber) {
 
-        float result = 0.0f;
+        float result = 0;
 
         switch (operation) {
             case "+" -> result = firstNumber + secondNumber;
