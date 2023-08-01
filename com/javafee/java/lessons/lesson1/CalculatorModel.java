@@ -20,6 +20,16 @@ public class CalculatorModel {
         return result;
     }
 
+    public String saveOperationDetails(String operation, float firstNumber, float secondNumber, float result) {
+        return firstNumber
+                + " "
+                + operation
+                + " "
+                + secondNumber
+                + " = "
+                + result;
+    }
+
     public String getOperation() {
         return operation;
     }
