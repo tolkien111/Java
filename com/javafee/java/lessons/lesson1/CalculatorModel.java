@@ -8,16 +8,12 @@ public class CalculatorModel {
     private float secondNumber;
 
     public static float doMathOperation(String operation, float firstNumber, float secondNumber) {
-
-
-
-
         return switch (operation) {
             case "+" -> firstNumber + secondNumber;
             case "-" -> firstNumber - secondNumber;
             case "*" -> firstNumber * secondNumber;
             case "/" -> firstNumber / secondNumber;
-            default -> 0;
+            default -> throw new UnsupportedOperationException("Invalid operation: " + operation);
         };
     }
 
