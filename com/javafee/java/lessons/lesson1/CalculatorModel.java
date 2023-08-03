@@ -8,16 +8,13 @@ public class CalculatorModel {
     private float secondNumber;
 
     public static float doMathOperation(String operation, float firstNumber, float secondNumber) {
-
-        float result = 0;
-
-        switch (operation) {
-            case "+" -> result = firstNumber + secondNumber;
-            case "-" -> result = firstNumber - secondNumber;
-            case "*" -> result = firstNumber * secondNumber;
-            case "/" -> result = firstNumber / secondNumber;
-        }
-        return result;
+        return switch (operation) {
+            case "+" -> firstNumber + secondNumber;
+            case "-" -> firstNumber - secondNumber;
+            case "*" -> firstNumber * secondNumber;
+            case "/" -> firstNumber / secondNumber;
+            default -> throw new UnsupportedOperationException("Invalid operation: " + operation);
+        };
     }
 
     public String saveOperationDetails(String operation, float firstNumber, float secondNumber, float result) {
