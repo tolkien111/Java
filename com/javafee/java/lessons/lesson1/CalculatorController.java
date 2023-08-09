@@ -54,7 +54,7 @@ public class CalculatorController {
                 model.setSecondNumber(Float.parseFloat(secondNumberString));
 
 
-                float result = CalculatorModel.doMathOperation(model.getOperation(),
+                float result = model.doMathOperation(model.getOperation(),
                         model.getFirstNumber(),
                         model.getSecondNumber());
                 view.printOperationDetails(model.getOperation(),
