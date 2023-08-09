@@ -1,2 +1,10 @@
-package com.javafee.java.lessons.tasks.task1blocks;public interface Structure {
+package com.javafee.java.lessons.tasks.task1blocks;
+
+import java.util.List;
+import java.util.Optional;
+
+interface Structure {
+    Optional<Block> findBlockByColor(String color);
+    List<Block> findBlocksByMaterial(String material);
+    int count();
 }
