@@ -37,7 +37,7 @@ public class CalculatorController {
 
                 view.putFirstNumber();
                 String firstNumberString = scanner.next();
-                while (isValidFloatNumberInString(firstNumberString)) {
+                while (isNotValidFloatNumberInString(firstNumberString)) {
                     view.chooseNotNumber();
                     firstNumberString = scanner.next();
                 }
@@ -46,7 +46,7 @@ public class CalculatorController {
 
                 view.putSecondNumber();
                 String secondNumberString = scanner.next();
-                while (isValidFloatNumberInString(secondNumberString) || isValidWhenDivideByNotZero(model.getOperation(),
+                while (isNotValidFloatNumberInString(secondNumberString) || isNotValidWhenDivideByZero(model.getOperation(),
                         Float.parseFloat(secondNumberString))) {
                     view.chooseNotNumberOrZeroBySecondNumberByDivide();
                     secondNumberString = scanner.next();
@@ -77,11 +77,12 @@ public class CalculatorController {
 
     }
 
-    public static boolean isValidFloatNumberInString(String number) {
-        return !number.matches("[+-]?([0-9]+[.])?[0-9]+");
+    public static boolean isNotValidFloatNumberInString(String number) {
+        boolean result = !number.matches("[+-]?([0-9]+[.])?[0-9]+");
+        return result;
     }
 
-    public static boolean isValidWhenDivideByNotZero(String operation, float secondNumber) {
+    public static boolean isNotValidWhenDivideByZero(String operation, float secondNumber) {
         return operation.equals("/") && secondNumber == 0;
     }
 }
