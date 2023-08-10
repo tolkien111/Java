@@ -1,12 +1,18 @@
 package com.javafee.java.lessons.tasks.task1blocks;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Wall implements Structure {
-    private List<Block> blocks;
+    private List<Block> blocks = new ArrayList<>();
+
+    public Wall(Block... allBlocks) {
+        blocks.addAll(Arrays.asList(allBlocks));
+    }
 
     public Optional<Block> findBlockByColor(String color) {
         return findByPredicateC(block -> block.getColor().equals(color));
