@@ -1,46 +1,57 @@
 package com.javafee.java.lessons.tasks.task1blocks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Wall implements Structure {
-    private List<Block> blocks = new ArrayList<>();
 
-    public Wall(Block... allBlocks) {
-        blocks.addAll(Arrays.asList(allBlocks));
-    }
+    private final List<Block> blocks = new ArrayList<>();
 
+    @Override
     public Optional<Block> findBlockByColor(String color) {
-        return findByPredicateC(block -> block.getColor().equals(color));
-    }
-
-    public List<Block> findBlocksByMaterial(String material) {
-        return findByPredicateM(n -> material.equals(n.getMaterial()));
-    }
-
-    private List<Block> findByPredicateM(Predicate<Block> predicate) {
-        return blocks.stream()
-                .map(f -> f.getMatchingObject(predicate))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-    }
-
-    private Optional<Block> findByPredicateC(Predicate<Block> predicate) {
-        return blocks.stream()
-                .map(f -> f.getMatchingObject(predicate))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        return findByPredicate(x -> x.getColor().equals(color))
                 .findFirst();
     }
 
-    public int count() {
+    @Override
+    public List<Block> findBlocksByMaterial(String material) {
+                return findByPredicate(y -> y.getMaterial().equals(material))
+                .toList();
+    }
+
+    private Stream<Block> findByPredicate(Predicate<Block> predicate) {
         return blocks.stream()
-                .mapToInt(Block::getChildrenCount)
-                .sum();
+                .flatMap(Block::toStream)
+                .filter(predicate);
+    }
+
+
+    @Override
+    public int count() {
+        return (int) blocks.stream()
+                .flatMap(Block::toStream)
+                .count();
+    }
+
+    public void addBlock(Block block) {
+        blocks.add(block);
+    }
+
+    public void removeBlock(Block block) {
+        blocks.remove(block);
+    }
+
+    public List<Block> getBlockList() {
+        return Collections.unmodifiableList(blocks);
+    }
+
+    @Override
+    public String toString() {
+        return "Wall{" +
+                "blocks=" + blocks +
+                '}';
     }
 }
+
