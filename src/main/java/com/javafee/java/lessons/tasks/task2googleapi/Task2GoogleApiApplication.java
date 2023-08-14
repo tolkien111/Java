@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Tast2GoogleApiApplication {
+public class Task2GoogleApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Tast2GoogleApiApplication.class, args);
+		SpringApplication.run(Task2GoogleApiApplication.class, args);
 	}
 
 }
