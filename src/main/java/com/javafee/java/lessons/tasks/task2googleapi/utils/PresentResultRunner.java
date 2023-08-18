@@ -19,9 +19,8 @@ public class PresentResultRunner implements CommandLineRunner {
     private String locationQueryString;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         LocationView locationView = locationService.searchForLocation(locationQueryString);
         System.out.println(locationView);
-
     }
 }

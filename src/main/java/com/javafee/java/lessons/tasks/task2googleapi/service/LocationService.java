@@ -1,21 +1,22 @@
 package com.javafee.java.lessons.tasks.task2googleapi.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javafee.java.lessons.tasks.task2googleapi.entity.Location;
+
+import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
 import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriUtils;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -37,25 +38,29 @@ public class LocationService {
 
     public LocationView searchForLocation(String locationQueryString) {
         String url = googleApiUrl + UriUtils.decode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode parse = mapper.readTree(response.getBody());
+        //Optional -> better NullPointerException handling, clean code
+        Pair<String, String> latlng = Optional.ofNullable(response.getBody())
+                .map(body -> body.results())
+                .filter(results -> !results.isEmpty())
+                .map(results -> results.get(0))
+                .map(result -> result.geometry())
+                .map(geometry -> geometry.location())
+                .map(location -> Pair.of(location.lat(), location.lng()))
+                .orElseThrow(() -> new RuntimeException("JSON response processing problem"));
 
-            //Get value lat and lng
-            double lat = parse.path("results").get(0).path("geometry").path("location").path("lat").asDouble();
-            double lng = parse.path("results").get(0).path("geometry").path("location").path("lng").asDouble();
+        double lat = Double.parseDouble(latlng.getFirst());
+        double lng = Double.parseDouble(latlng.getSecond());
 
-            Location location = new Location(locationQueryString, lat, lng);
-            repository.save(location);
-
-            return new LocationView(locationQueryString, lat, lng);
-
-        } catch (IOException e) {
-            throw new RuntimeException("JSON response processing problem", e);
-        }
-
+        LocationEntity location = LocationEntity
+                .builder()
+                .addressDescription(locationQueryString)
+                .latitude(lat)
+                .longitude(lng)
+                .build();
+        repository.save(location);
+        return new LocationView(locationQueryString, lat, lng);
 
     }
 

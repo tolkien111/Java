@@ -8,14 +8,17 @@
 		<version>3.1.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>com.javafee.java.lessons.tasks</groupId>
 	<artifactId>task2googleapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Task 2 GoogleAPI</name>
 	<description>Spring Boot with GoogleAPI usage</description>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
