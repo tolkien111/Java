@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -40,27 +39,22 @@ public class LocationService {
         String url = googleApiUrl + UriUtils.decode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
         ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
 
-        //Optional -> better NullPointerException handling, clean code
-        Pair<String, String> latlng = Optional.ofNullable(response.getBody())
+        LocationEntity location = Optional.ofNullable(response.getBody())
                 .map(body -> body.results())
                 .filter(results -> !results.isEmpty())
                 .map(results -> results.get(0))
                 .map(result -> result.geometry())
                 .map(geometry -> geometry.location())
-                .map(location -> Pair.of(location.lat(), location.lng()))
+                .map(locationResult -> LocationEntity
+                        .builder()
+                        .addressDescription(locationQueryString)
+                        .latitude(Double.parseDouble(locationResult.lat()))
+                        .longitude(Double.parseDouble(locationResult.lng()))
+                        .build())
                 .orElseThrow(() -> new RuntimeException("JSON response processing problem"));
 
-        double lat = Double.parseDouble(latlng.getFirst());
-        double lng = Double.parseDouble(latlng.getSecond());
-
-        LocationEntity location = LocationEntity
-                .builder()
-                .addressDescription(locationQueryString)
-                .latitude(lat)
-                .longitude(lng)
-                .build();
         repository.save(location);
-        return new LocationView(locationQueryString, lat, lng);
+        return new LocationView(locationQueryString, location.getLatitude(), location.getLongitude());
 
     }
 
