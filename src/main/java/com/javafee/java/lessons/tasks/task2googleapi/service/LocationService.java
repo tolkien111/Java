@@ -35,7 +35,7 @@ public class LocationService {
 
 
     public LocationView searchForLocation(String locationQueryString) {
-        GoogleResponse body = getGoogleResponse(locationQueryString);
+        GoogleResponse body = getGoogleResponseBody(locationQueryString);
 
         if (body == null) {
             throw new RuntimeException("Received null response from Google API");
@@ -55,7 +55,7 @@ public class LocationService {
         return googleApiUrl + UriUtils.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
     }
 
-    private GoogleResponse getGoogleResponse(String locationQueryString) {
+    private GoogleResponse getGoogleResponseBody(String locationQueryString) {
         String url = buildGoogleApiUrl(locationQueryString);
         ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
         return response.getBody();
