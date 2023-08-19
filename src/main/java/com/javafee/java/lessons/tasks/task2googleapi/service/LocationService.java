@@ -35,10 +35,7 @@ public class LocationService {
 
 
     public LocationView searchForLocation(String locationQueryString) {
-        String url = googleApiUrl + UriUtils.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
-        ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
-
-        GoogleResponse body = response.getBody();
+        GoogleResponse body = getGoogleResponse(locationQueryString);
 
         if (body == null) {
             throw new RuntimeException("Received null response from Google API");
@@ -47,16 +44,35 @@ public class LocationService {
         String lat = body.results().get(0).geometry().location().lat();
         String lng = body.results().get(0).geometry().location().lng();
 
-        if(repository.locationExists(lat,lng)){
-            LocationEntity locationEntity = repository.readLocation(lat, lng); // załóżmy, że ta metoda zwraca obiekt LocationEntity
-            return locationEntity.toView();
+        if (repository.locationExists(lat, lng)) {
+            return transformEntityToView(lat, lng);
         }
 
-        LocationEntity location = LocationEntity.builder().addressDescription(locationQueryString).latitude(lat).longitude(lng).build();
+        return createAndSaveLocation(locationQueryString, lat, lng);
+    }
+
+    private String buildGoogleApiUrl(String locationQueryString) {
+        return googleApiUrl + UriUtils.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
+    }
+
+    private GoogleResponse getGoogleResponse(String locationQueryString) {
+        String url = buildGoogleApiUrl(locationQueryString);
+        ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
+        return response.getBody();
+    }
+
+    private LocationView transformEntityToView(String lat, String lng) {
+        return repository.readLocation(lat, lng).toView();
+    }
+
+    private LocationView createAndSaveLocation(String locationQueryString, String lat, String lng) {
+        LocationEntity location = LocationEntity.builder()
+                .addressDescription(locationQueryString)
+                .latitude(lat)
+                .longitude(lng)
+                .build();
 
         repository.save(location);
         return new LocationView(locationQueryString, location.getLatitude(), location.getLongitude());
     }
-
-
 }
