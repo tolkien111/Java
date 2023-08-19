@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -39,19 +38,16 @@ public class LocationService {
         String url = googleApiUrl + UriUtils.decode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
         ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
 
-        LocationEntity location = Optional.ofNullable(response.getBody())
-                .map(body -> body.results())
-                .filter(results -> !results.isEmpty())
-                .map(results -> results.get(0))
-                .map(result -> result.geometry())
-                .map(geometry -> geometry.location())
-                .map(locationResult -> LocationEntity
-                        .builder()
-                        .addressDescription(locationQueryString)
-                        .latitude(Double.parseDouble(locationResult.lat()))
-                        .longitude(Double.parseDouble(locationResult.lng()))
-                        .build())
-                .orElseThrow(() -> new RuntimeException("JSON response processing problem"));
+        GoogleResponse body = response.getBody();
+
+        if (body == null) {
+            throw new RuntimeException("Received null response from Google API");
+        }
+
+        double lat = Double.parseDouble(body.results().get(0).geometry().location().lat());
+        double lng = Double.parseDouble(body.results().get(0).geometry().location().lng());
+
+        LocationEntity location = LocationEntity.builder().addressDescription(locationQueryString).latitude(lat).longitude(lng).build();
 
         repository.save(location);
         return new LocationView(locationQueryString, location.getLatitude(), location.getLongitude());
