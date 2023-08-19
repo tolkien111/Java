@@ -35,7 +35,7 @@ public class LocationService {
 
 
     public LocationView searchForLocation(String locationQueryString) {
-        String url = googleApiUrl + UriUtils.decode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
+        String url = googleApiUrl + UriUtils.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
         ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
 
         GoogleResponse body = response.getBody();
@@ -44,14 +44,18 @@ public class LocationService {
             throw new RuntimeException("Received null response from Google API");
         }
 
-        double lat = Double.parseDouble(body.results().get(0).geometry().location().lat());
-        double lng = Double.parseDouble(body.results().get(0).geometry().location().lng());
+        String lat = body.results().get(0).geometry().location().lat();
+        String lng = body.results().get(0).geometry().location().lng();
+
+        if(repository.locationExists(lat,lng)){
+            LocationEntity locationEntity = repository.readLocation(lat, lng); // załóżmy, że ta metoda zwraca obiekt LocationEntity
+            return locationEntity.toView();
+        }
 
         LocationEntity location = LocationEntity.builder().addressDescription(locationQueryString).latitude(lat).longitude(lng).build();
 
         repository.save(location);
         return new LocationView(locationQueryString, location.getLatitude(), location.getLongitude());
-
     }
 
 

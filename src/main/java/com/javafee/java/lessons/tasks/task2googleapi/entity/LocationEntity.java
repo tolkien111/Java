@@ -1,5 +1,6 @@
 package com.javafee.java.lessons.tasks.task2googleapi.entity;
 
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,7 +10,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "locations")
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -20,6 +20,10 @@ public class LocationEntity {
     @Builder.Default
     private UUID id = UUID.randomUUID();
     private String addressDescription;
-    private double latitude;
-    private double longitude;
+    private String latitude;
+    private String longitude;
+
+    public LocationView toView(){
+        return new LocationView(addressDescription, latitude, longitude);
+    }
 }
