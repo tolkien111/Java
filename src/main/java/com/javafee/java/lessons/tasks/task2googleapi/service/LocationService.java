@@ -3,8 +3,8 @@ package com.javafee.java.lessons.tasks.task2googleapi.service;
 
 import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
 import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.v1.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.v1.googlelocationpath.GoogleResponse;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

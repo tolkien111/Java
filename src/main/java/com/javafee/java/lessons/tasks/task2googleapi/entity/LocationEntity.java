@@ -1,6 +1,6 @@
 package com.javafee.java.lessons.tasks.task2googleapi.entity;
 
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.v1.LocationView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
