@@ -29,6 +29,9 @@ public class LocationServiceV2 {
     @NonNull
     private final RestTemplate restTemplate;
 
+    @NonNull
+    private final LocationMapper mapper;
+
     @Value(value = "${google.api.url}")
     private String googleApiUrl;
 
@@ -44,12 +47,12 @@ public class LocationServiceV2 {
         String lng = body.getBody().getResults().get(0).getGeometry().getLocation().getLng();
 
         if (repository.locationExists(lat, lng))
-            return LocationMapper.getInstance().entityToView(repository.readLocation(lat, lng));
+            return mapper.entityToView(repository.readLocation(lat, lng));
 
         LocationEntity location = LocationEntity.builder().addressDescription(locationQuerySting).latitude(lat).longitude(lng).build();
         repository.save(location);
 
-        return LocationMapper.getInstance().entityToView(location);
+        return mapper.entityToView(location);
     }
 
 }
