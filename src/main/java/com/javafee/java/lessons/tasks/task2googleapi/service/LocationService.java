@@ -3,15 +3,16 @@ package com.javafee.java.lessons.tasks.task2googleapi.service;
 
 import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
 import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.v1.LocationView;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.v1.googlelocationpath.GoogleResponse;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -22,57 +23,48 @@ import java.nio.charset.StandardCharsets;
 public class LocationService {
 
     @NonNull
-    private RestTemplate restTemplate;
-
+    private final LocationRepository repository;
     @NonNull
-    LocationRepository repository;
+    private final RestTemplate restTemplate;
+    @NonNull
+    private final LocationMapper mapper;
 
-    @Value("${google.api.url}")
+    @Value(value = "${google.api.url}")
     private String googleApiUrl;
-
-    @Value("${google.api.keys}")
-    private String googleApiKey;
-
+    @Value(value = "${google.api.keys}")
+    private String googleApiKeys;
 
     public LocationView searchForLocation(String locationQueryString) {
         GoogleResponse body = getGoogleResponseBody(locationQueryString);
 
-        if (body == null) {
-            throw new RuntimeException("Received null response from Google API");
-        }
+        String latitude = body.getResults().get(0).getGeometry().getLocation().getLat();
+        String longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
 
-        String lat = body.results().get(0).geometry().location().lat();
-        String lng = body.results().get(0).geometry().location().lng();
+        if (repository.locationExists(latitude, longitude))
+            return mapper.entityToView(repository.readLocation(latitude, longitude));
 
-        if (repository.locationExists(lat, lng)) {
-            return transformEntityToView(lat, lng);
-        }
+        repository.save(createLocationEntity(body, latitude, longitude));
 
-        return createAndSaveLocation(locationQueryString, lat, lng);
+        return mapper.entityToView(createLocationEntity(body, latitude, longitude));
     }
 
-    private String buildGoogleApiUrl(String locationQueryString) {
-        return googleApiUrl + URLEncoder.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKey;
+    private String createGoogleApiUrl(String locationQueryString) {
+        return googleApiUrl + URLEncoder.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKeys;
     }
 
     private GoogleResponse getGoogleResponseBody(String locationQueryString) {
-        String url = buildGoogleApiUrl(locationQueryString);
-        ResponseEntity<GoogleResponse> response = restTemplate.getForEntity(url, GoogleResponse.class);
-        return response.getBody();
+        return restTemplate.getForEntity(createGoogleApiUrl(locationQueryString), GoogleResponse.class).getBody();
     }
 
-    private LocationView transformEntityToView(String lat, String lng) {
-        return repository.readLocation(lat, lng).toView();
+    private String createFormattedAddress(GoogleResponse body) {
+        return body.getResults().get(0).getFormatted_address();
     }
 
-    private LocationView createAndSaveLocation(String locationQueryString, String lat, String lng) {
-        LocationEntity location = LocationEntity.builder()
-                .addressDescription(locationQueryString)
-                .latitude(lat)
-                .longitude(lng)
+    private LocationEntity createLocationEntity(GoogleResponse body, String latitude, String longitude) {
+        return LocationEntity.builder()
+                .addressDescription(createFormattedAddress(body))
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
-
-        repository.save(location);
-        return new LocationView(locationQueryString, location.getLatitude(), location.getLongitude());
     }
 }

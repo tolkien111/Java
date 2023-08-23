@@ -1,6 +1,5 @@
 package com.javafee.java.lessons.tasks.task2googleapi.entity;
 
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.v1.LocationView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -23,7 +22,4 @@ public class LocationEntity {
     private String latitude;
     private String longitude;
 
-    public LocationView toView(){
-        return new LocationView(addressDescription, latitude, longitude);
-    }
 }

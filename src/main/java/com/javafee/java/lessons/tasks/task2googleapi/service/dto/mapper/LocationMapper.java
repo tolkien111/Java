@@ -1,7 +1,7 @@
-package com.javafee.java.lessons.tasks.task2googleapi.service.dto.v2.mapper;
+package com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper;
 
 import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.v2.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
