@@ -8,5 +8,6 @@ import java.util.List;
 public class GoogleResponse {
 
     private List<Result> results;
+    private String status;
 
 }
