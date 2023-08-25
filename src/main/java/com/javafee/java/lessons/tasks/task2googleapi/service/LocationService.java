@@ -6,7 +6,8 @@ import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationReposito
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
-import com.javafee.java.lessons.tasks.task2googleapi.service.validation.LocationQueryStringValidation;
+import com.javafee.java.lessons.tasks.task2googleapi.service.validation.GoogleApiResponseValidator;
+import com.javafee.java.lessons.tasks.task2googleapi.service.validation.LocationQueryStringValidator;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,11 @@ public class LocationService {
     private String googleApiKeys;
 
     public LocationView searchForLocation(String locationQueryString) {
-        LocationQueryStringValidation.validateLocalQueryString(locationQueryString);
+        LocationQueryStringValidator.validateLocalQueryString(locationQueryString);
 
         GoogleResponse body = getGoogleResponseBody(locationQueryString);
+
+        GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString);
 
         String latitude = body.getResults().get(0).getGeometry().getLocation().getLat();
         String longitude = body.getResults().get(0).getGeometry().getLocation().getLng();

@@ -4,7 +4,7 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.exception.LocationQ
 
 import java.util.Objects;
 
-public class LocationQueryStringValidation {
+public class LocationQueryStringValidator {
 
 
     public static void validateLocalQueryString(String localQueryString){
