@@ -17,7 +17,7 @@ public class PresentResultRunner implements CommandLineRunner {
     @NonNull
     private LocationService locationService;
 
-    @Value("${google.api.location-sample-query}")
+    @Value(value = "${google.api.location-sample-query}")
     private String locationQueryString;
 
     @Override

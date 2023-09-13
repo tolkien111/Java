@@ -30,6 +30,8 @@ public class LocationService {
     private final RestTemplate restTemplate;
     @NonNull
     private final LocationMapper mapper;
+    @NonNull
+    private final LocationQueryStringValidator validator;
 
     @Value(value = "${google.api.url}")
     private String googleApiUrl;
@@ -37,7 +39,7 @@ public class LocationService {
     private String googleApiKeys;
 
     public LocationView searchForLocation(String locationQueryString) {
-        LocationQueryStringValidator.validateLocalQueryString(locationQueryString);
+        validator.validateLocalQueryString(locationQueryString);
 
         GoogleResponse body = getGoogleResponseBody(locationQueryString);
 
