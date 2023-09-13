@@ -3,7 +3,7 @@ package com.javafee.java.lessons.tasks.task2googleapi.service;
 
 import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
 import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.GoogleApiResponseValidator;

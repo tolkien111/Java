@@ -1,6 +1,6 @@
 package com.javafee.java.lessons.tasks.task2googleapi.controller;
 
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

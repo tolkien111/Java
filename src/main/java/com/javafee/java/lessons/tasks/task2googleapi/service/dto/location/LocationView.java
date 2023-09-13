@@ -1,4 +1,4 @@
-package com.javafee.java.lessons.tasks.task2googleapi.service.dto;
+package com.javafee.java.lessons.tasks.task2googleapi.service.dto.location;
 
 import lombok.Data;
 

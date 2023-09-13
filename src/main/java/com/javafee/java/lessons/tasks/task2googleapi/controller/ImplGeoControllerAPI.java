@@ -1,7 +1,7 @@
 package com.javafee.java.lessons.tasks.task2googleapi.controller;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.LocationService;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
