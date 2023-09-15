@@ -16,15 +16,13 @@ public class GoogleApiResponseValidator {
     }
 
     private void validateStatus(GoogleResponse body) {
-        if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) != GoogleApiGeocodingStatus.OK) {
+        if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) != GoogleApiGeocodingStatus.OK)
             throw new GoogleCommunicationException("Error while communicating with Google API, status: " + body.getStatus());
-        }
     }
 
     private void validateResultsNotEmpty(GoogleResponse body, String locationQueryString) {
-        if (Objects.isNull(body.getResults()) || body.getResults().isEmpty()) {
+        if (Objects.isNull(body.getResults()) || body.getResults().isEmpty())
             throw new GoogleCommunicationException("Google API returned no results for the query: " + locationQueryString);
-        }
     }
 }
 

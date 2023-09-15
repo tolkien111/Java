@@ -11,8 +11,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class LocationQueryStringValidator {
 
-    @Value(value = "${forbidden.characters.for.location-query-string}")
+    @Value(value = "${forbidden.characters}")
     private String forbiddenCharacters;
+
+    @Value(value = "${max.address.length}")
+    private int MAX_LENGTH;
 
     public void validateLocalQueryString(String localQueryString) {
         isNullOrEmpty(localQueryString);
@@ -26,7 +29,6 @@ public class LocationQueryStringValidator {
     }
 
     private void isTooLong(String locationQueryString) {
-        final int MAX_LENGTH = 280; // from Google Documentation
         if (locationQueryString.length() >= MAX_LENGTH)
             throw new LocationQueryStringException("locationQueryString is too long");
     }
