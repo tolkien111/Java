@@ -1,4 +1,4 @@
-package com.javafee.java.lessons.tasks.task2googleapi.controller;
+package com.javafee.java.lessons.tasks.task2googleapi.controller.exception;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.exception.CustomExceptionDto;
 import com.javafee.java.lessons.tasks.task2googleapi.service.exception.GoogleCommunicationException;
@@ -21,28 +21,28 @@ import java.time.LocalDateTime;
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(LocationQueryStringException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<CustomExceptionDto> handleError(LocationQueryStringException l, WebRequest webRequest, HttpServletRequest request) {
-        log.error("Location query string exception: {}", l.getMessage());
-        return new ResponseEntity<>(getExceptionDto(HttpStatus.BAD_REQUEST, l.getMessage(), webRequest, request),
+    public ResponseEntity<CustomExceptionDto> handleError(LocationQueryStringException exception, WebRequest webRequest,
+                                                          HttpServletRequest request) {
+        log.error("Location query string exception: {}", exception.getMessage());
+        return new ResponseEntity<>(getExceptionDto(HttpStatus.BAD_REQUEST, exception.getMessage(), webRequest, request),
                 HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(GoogleCommunicationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<CustomExceptionDto> handleError(GoogleCommunicationException g, WebRequest webRequest, HttpServletRequest request) {
-        log.error("Google communication exception: {}", g.getMessage());
-        return new ResponseEntity<>(getExceptionDto(HttpStatus.INTERNAL_SERVER_ERROR, g.getMessage(), webRequest, request),
+    public ResponseEntity<CustomExceptionDto> handleError(GoogleCommunicationException exception, WebRequest webRequest,
+                                                          HttpServletRequest request) {
+        log.error("Google communication exception: {}", exception.getMessage());
+        return new ResponseEntity<>(getExceptionDto(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), webRequest, request),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private static CustomExceptionDto getExceptionDto(HttpStatus internalServerError,
-                                                      String g,
-                                                      WebRequest webRequest,
-                                                      HttpServletRequest request) {
+    private static CustomExceptionDto getExceptionDto(HttpStatus internalServerError, String message,
+                                                      WebRequest webRequest, HttpServletRequest request) {
         return CustomExceptionDto.builder()
                 .timestamp(Timestamp.valueOf(LocalDateTime.now()))
                 .status(String.valueOf(internalServerError))
-                .message(g)
+                .message(message)
                 .path(webRequest.getDescription(false))
                 .method(request.getMethod())
                 .build();

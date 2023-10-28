@@ -40,19 +40,13 @@ public class LocationService {
 
     public LocationView searchForLocation(String locationQueryString) {
         validator.validateLocalQueryString(locationQueryString);
-
         GoogleResponse body = getGoogleResponseBody(locationQueryString);
-
         GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString);
-
-        String latitude = body.getResults().get(0).getGeometry().getLocation().getLat();
-        String longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
-
+        String latitude = body.getResults().get(0).getGeometry().getLocation().getLat(),
+                longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
         if (repository.locationExists(latitude, longitude))
             return mapper.entityToView(repository.readLocation(latitude, longitude));
-
         repository.save(createLocationEntity(body, latitude, longitude));
-
         return mapper.entityToView(createLocationEntity(body, latitude, longitude));
     }
 
