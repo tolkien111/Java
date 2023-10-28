@@ -1,7 +1,7 @@
 package com.javafee.java.lessons.tasks.task2googleapi.utils;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.LocationService;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 public class PresentResultRunner implements CommandLineRunner {
 
     @NonNull
-    private LocationService locationService;
+    private final LocationService locationService;
 
-    @Value("${google.api.location-sample-query}")
+    @Value(value = "${google.api.location-sample-query}")
     private String locationQueryString;
 
     @Override

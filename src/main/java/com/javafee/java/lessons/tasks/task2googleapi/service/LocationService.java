@@ -3,9 +3,11 @@ package com.javafee.java.lessons.tasks.task2googleapi.service;
 
 import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
 import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
+import com.javafee.java.lessons.tasks.task2googleapi.service.validation.GoogleApiResponseValidator;
+import com.javafee.java.lessons.tasks.task2googleapi.service.validation.LocationQueryStringValidator;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ public class LocationService {
     private final RestTemplate restTemplate;
     @NonNull
     private final LocationMapper mapper;
+    @NonNull
+    private final LocationQueryStringValidator validator;
 
     @Value(value = "${google.api.url}")
     private String googleApiUrl;
@@ -35,16 +39,14 @@ public class LocationService {
     private String googleApiKeys;
 
     public LocationView searchForLocation(String locationQueryString) {
+        validator.validateLocalQueryString(locationQueryString);
         GoogleResponse body = getGoogleResponseBody(locationQueryString);
-
-        String latitude = body.getResults().get(0).getGeometry().getLocation().getLat();
-        String longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
-
+        GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString);
+        String latitude = body.getResults().get(0).getGeometry().getLocation().getLat(),
+                longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
         if (repository.locationExists(latitude, longitude))
             return mapper.entityToView(repository.readLocation(latitude, longitude));
-
         repository.save(createLocationEntity(body, latitude, longitude));
-
         return mapper.entityToView(createLocationEntity(body, latitude, longitude));
     }
 
