@@ -23,31 +23,28 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<CustomExceptionDto> handleError(LocationQueryStringException l, WebRequest webRequest, HttpServletRequest request) {
         log.error("Location query string exception: {}", l.getMessage());
-
-        CustomExceptionDto exceptionDto = CustomExceptionDto.builder()
-                .timestamp(Timestamp.valueOf(LocalDateTime.now()))
-                .status(String.valueOf(HttpStatus.BAD_REQUEST))
-                .message(l.getMessage())
-                .path(webRequest.getDescription(false))
-                .method(request.getMethod())
-                .build();
-
-        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(getExceptionDto(HttpStatus.BAD_REQUEST, l.getMessage(), webRequest, request),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(GoogleCommunicationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<CustomExceptionDto> handleError(GoogleCommunicationException g, WebRequest webRequest, HttpServletRequest request) {
         log.error("Google communication exception: {}", g.getMessage());
+        return new ResponseEntity<>(getExceptionDto(HttpStatus.INTERNAL_SERVER_ERROR, g.getMessage(), webRequest, request),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
-        CustomExceptionDto exceptionDto = CustomExceptionDto.builder()
+    private static CustomExceptionDto getExceptionDto(HttpStatus internalServerError,
+                                                      String g,
+                                                      WebRequest webRequest,
+                                                      HttpServletRequest request) {
+        return CustomExceptionDto.builder()
                 .timestamp(Timestamp.valueOf(LocalDateTime.now()))
-                .status(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR))
-                .message(g.getMessage())
+                .status(String.valueOf(internalServerError))
+                .message(g)
                 .path(webRequest.getDescription(false))
                 .method(request.getMethod())
                 .build();
-
-        return new ResponseEntity<>(exceptionDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

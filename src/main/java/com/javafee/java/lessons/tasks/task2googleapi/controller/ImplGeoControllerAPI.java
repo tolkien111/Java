@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImplGeoControllerAPI implements GeoControllerAPI {
 
     @NonNull
-    LocationService locationService;
+    private final LocationService locationService;
 
     @Override
     public ResponseEntity<LocationView> searchForLocation(String locationQueryString) {

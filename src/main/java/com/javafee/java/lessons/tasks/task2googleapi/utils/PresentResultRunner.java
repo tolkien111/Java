@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class PresentResultRunner implements CommandLineRunner {
 
     @NonNull
-    private LocationService locationService;
+    private final LocationService locationService;
 
     @Value(value = "${google.api.location-sample-query}")
     private String locationQueryString;
