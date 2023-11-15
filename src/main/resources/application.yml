@@ -54,3 +54,21 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: "jdbc:h2:mem:googleapitest"
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+
+  # Hibernate
+  jpa:
+    database-platform: "org.hibernate.dialect.H2Dialect"
+    show-sql: true
+    hibernate:
+      ddl-auto: update
