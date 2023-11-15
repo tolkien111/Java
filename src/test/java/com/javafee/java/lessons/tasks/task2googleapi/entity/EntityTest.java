@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 abstract class EntityTest {
 
     @Autowired
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
     protected void persist(Object entity){
         entityManager.persist(entity);
