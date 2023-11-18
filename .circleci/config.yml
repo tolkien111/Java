@@ -2,9 +2,9 @@ version: 2.1
 
 jobs:
   build-and-test:
+    working_directory: ~/java
     docker:
       - image: cimg/openjdk:17.0.9
-        working_directory: ~/java
     steps:
       - checkout:
           path: ~/java
