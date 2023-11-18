@@ -11,8 +11,14 @@ import java.util.Objects;
 public class GoogleApiResponseValidator {
 
     public void validateGoogleApiResponse(GoogleResponse body, String locationQueryString) {
+        validateAccess(body);
         validateStatus(body);
         validateResultsNotEmpty(body, locationQueryString);
+    }
+
+    private void validateAccess(GoogleResponse body){
+        if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) == GoogleApiGeocodingStatus.REQUEST_DENIED)
+            throw new GoogleCommunicationException("Access not approved: incorrect google api key");
     }
 
     private void validateStatus(GoogleResponse body) {
