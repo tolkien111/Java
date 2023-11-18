@@ -18,8 +18,11 @@ public class LocationEntity {
     @Id
     @Builder.Default
     private UUID id = UUID.randomUUID();
+    @NonNull
     private String addressDescription;
+    @NonNull
     private String latitude;
+    @NonNull
     private String longitude;
 
 }

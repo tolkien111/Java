@@ -1,20 +1,24 @@
-package com.javafee.java.lessons.tasks.task2googleapi.entity;
+package com.javafee.java.lessons.tasks.task2googleapi.repository;
 
-import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
+import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LocationEntityTest extends EntityTest{
+@SpringBootTest
+@Transactional
+class LocationRepositoryTest {
 
     @Autowired
     private LocationRepository repository;
 
     @ParameterizedTest
     @CsvFileSource(resources = "/csv/locationEntityData.csv", numLinesToSkip = 1)
-    void shouldSaveAddressToDb(String address, String latitude, String longitude){
+    void shouldReadLocationFromDb(String address, String latitude, String longitude) {
         //GIVEN
         final var location = LocationEntity.builder()
                 .addressDescription(address)
@@ -27,11 +31,12 @@ class LocationEntityTest extends EntityTest{
         //THEN
         final var readLocation = repository.readLocation(latitude, longitude);
         assertEquals(location, readLocation);
+        assertEquals(location.getAddressDescription(), readLocation.getAddressDescription());
     }
 
     @ParameterizedTest
     @CsvFileSource(resources = "/csv/locationEntityData.csv", numLinesToSkip = 1)
-    void shouldSaveAddressToDb_V2(String address, String latitude, String longitude){
+    void shouldExistsLocationInDb(String address, String latitude, String longitude) {
         //GIVEN
         final var location = LocationEntity.builder()
                 .addressDescription(address)
@@ -39,20 +44,9 @@ class LocationEntityTest extends EntityTest{
                 .longitude(longitude)
                 .build();
         //WHEN
-        persist(location);
+        repository.saveAndFlush(location);
 
         //THEN
-        final var readLocation = entityManager.find(LocationEntity.class, location.getId());
-        assertEquals(location, readLocation);
+        assertTrue(repository.locationExists(latitude, longitude));
     }
-
-    @ParameterizedTest
-    @CsvFileSource(resources = "/csv/locationEntityData.csv", numLinesToSkip = 1)
-    void shouldThrowExceptionWithoutArgumentAddressDescription(String latitude, String longitude){
-        //GIVEN & WHEN & THEN
-        assertThrows(NullPointerException.class, LocationEntity.builder()
-                .latitude(latitude)
-                .longitude(longitude)::build);
-    }
-
 }

@@ -11,9 +11,9 @@ import java.util.Objects;
 public class GoogleApiResponseValidator {
 
     public void validateGoogleApiResponse(GoogleResponse body, String locationQueryString) {
-        validateStatus(body);
-        validateResultsNotEmpty(body, locationQueryString);
-    }
+    validateStatus(body);
+    validateResultsNotEmpty(body, locationQueryString);
+}
 
     private void validateStatus(GoogleResponse body) {
         if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) != GoogleApiGeocodingStatus.OK)
