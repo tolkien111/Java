@@ -2,11 +2,12 @@ version: 2.1
 
 jobs:
   build-and-test:
+    working_directory: ~/java
     docker:
       - image: cimg/openjdk:17.0.9
-        #working_directory:
     steps:
-      - checkout
+      - checkout:
+          path: ~/java
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
