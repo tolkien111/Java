@@ -23,10 +23,6 @@ jobs:
       - run:
           name: Tests
           command: mvn test -Dgoogle.api.keys=$GOOGLE_API_KEY
-      - run:
-          name: Java Version
-          command: java --version
-
 
 workflows:
   version: 2
