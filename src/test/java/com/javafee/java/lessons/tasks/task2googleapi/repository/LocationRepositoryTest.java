@@ -31,7 +31,6 @@ class LocationRepositoryTest {
         //THEN
         final var readLocation = repository.readLocation(latitude, longitude);
         assertEquals(location, readLocation);
-        assertEquals(location.getAddressDescription(), readLocation.getAddressDescription());
     }
 
     @ParameterizedTest

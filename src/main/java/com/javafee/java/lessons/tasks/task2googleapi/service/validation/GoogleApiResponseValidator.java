@@ -12,7 +12,7 @@ public class GoogleApiResponseValidator {
 
     public void validateGoogleApiResponse(GoogleResponse body, String locationQueryString) {
     validateStatus(body);
-    validateResultsNotEmpty(body, locationQueryString);
+    validateNotEmptyOrNotNullResults(body, locationQueryString);
 }
 
     private void validateStatus(GoogleResponse body) {
@@ -20,7 +20,7 @@ public class GoogleApiResponseValidator {
             throw new GoogleCommunicationException("Error while communicating with Google API, status: " + body.getStatus());
     }
 
-    private void validateResultsNotEmpty(GoogleResponse body, String locationQueryString) {
+    private void validateNotEmptyOrNotNullResults(GoogleResponse body, String locationQueryString) {
         if (Objects.isNull(body.getResults()) || body.getResults().isEmpty())
             throw new GoogleCommunicationException("Google API returned no results for the query: " + locationQueryString);
     }

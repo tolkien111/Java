@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -25,4 +26,17 @@ public class LocationEntity {
     @NonNull
     private String longitude;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LocationEntity that = (LocationEntity) o;
+        return Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude);
+    }
 }
