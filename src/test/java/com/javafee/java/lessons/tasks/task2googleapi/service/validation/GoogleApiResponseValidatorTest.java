@@ -6,6 +6,7 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationp
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.Result;
 import com.javafee.java.lessons.tasks.task2googleapi.service.exception.GoogleCommunicationException;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.enums.GoogleApiGeocodingStatus;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -27,16 +29,12 @@ class GoogleApiResponseValidatorTest {
     @Mock
     GoogleResponse body;
 
+    static String locationQueryString = "Dworzec Główny Gdańsk";
+
     private static Stream<GoogleApiGeocodingStatus> provideStatusValuesWithoutOk() {
         return Arrays.stream(GoogleApiGeocodingStatus.values())
                 .skip(1)
                 .limit(4);
-    }
-
-    private static Stream<GoogleApiGeocodingStatus> provideStatusValuesOnlyOk() {
-        return Arrays.stream(GoogleApiGeocodingStatus.values())
-                .skip(0)
-                .limit(1);
     }
 
     private static GoogleResponse createFullMockGoogleResponse(GoogleApiGeocodingStatus status) {
@@ -63,15 +61,42 @@ class GoogleApiResponseValidatorTest {
     @MethodSource(value = "provideStatusValuesWithoutOk")
     void shouldThrowGoogleCommunicationExceptionWhenStatusIsNotOk(GoogleApiGeocodingStatus status) {
         //GIVEN
-        String address = "Dworzec Główny Gdańsk";
         body = createFullMockGoogleResponse(status);
 
         //WHEN & THEN
-        System.out.println(body.getStatus());
         assertThrows(GoogleCommunicationException.class,
-                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, address));
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
+        assertThatThrownBy(
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
+                .isInstanceOf(GoogleCommunicationException.class)
+                .hasMessageContaining("Error while communicating with Google API, status: ");
     }
 
-    void shouldThrowGoogleCommunicationExceptionWhenResultsAreNull() {
+    @Test
+    void shouldThrowGoogleCommunicationExceptionWhenBodyIsNull() {
+        //GIVEN
+        body = null;
+
+        //WHEN & THEN
+        assertThrows(GoogleCommunicationException.class,
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
+        assertThatThrownBy(
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
+                .isInstanceOf(GoogleCommunicationException.class)
+                .hasMessageContaining("Google API returned no results for the query: ");
+    }
+
+    @Test
+    void shouldThrowGoogleCommunicationExceptionWhenResultsAreEmpty() {
+        //GIVEN @WHEN
+        Mockito.when(body.getResults()).thenReturn(new ArrayList<>());
+
+        //THEN
+        assertThrows(GoogleCommunicationException.class,
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
+        assertThatThrownBy(
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
+                .isInstanceOf(GoogleCommunicationException.class)
+                .hasMessageContaining("Google API returned no results for the query: ");
     }
 }

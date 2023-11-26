@@ -11,9 +11,9 @@ import java.util.Objects;
 public class GoogleApiResponseValidator {
 
     public void validateGoogleApiResponse(GoogleResponse body, String locationQueryString) {
-    validateStatus(body);
-    validateNotEmptyOrNotNullResults(body, locationQueryString);
-}
+        validateNotEmptyOrNotNullResults(body, locationQueryString);
+        validateStatus(body);
+    }
 
     private void validateStatus(GoogleResponse body) {
         if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) != GoogleApiGeocodingStatus.OK)
@@ -21,7 +21,7 @@ public class GoogleApiResponseValidator {
     }
 
     private void validateNotEmptyOrNotNullResults(GoogleResponse body, String locationQueryString) {
-        if (Objects.isNull(body.getResults()) || body.getResults().isEmpty())
+        if (Objects.equals(body, null) || body.getResults().isEmpty())
             throw new GoogleCommunicationException("Google API returned no results for the query: " + locationQueryString);
     }
 }
