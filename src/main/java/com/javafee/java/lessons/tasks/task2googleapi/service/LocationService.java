@@ -41,7 +41,7 @@ public class LocationService {
         GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString);
         String latitude = body.getResults().get(0).getGeometry().getLocation().getLat(),
                 longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
-        LocationEntityCoordinatesValidator.validateLocationCoordinatesEntity(latitude, longitude);
+        LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude);
         if (repository.locationExists(latitude, longitude))
             return mapper.entityToView(repository.readLocation(latitude, longitude));
         repository.save(createLocationEntity(body, latitude, longitude));

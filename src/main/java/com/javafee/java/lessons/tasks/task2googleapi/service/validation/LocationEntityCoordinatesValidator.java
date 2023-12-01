@@ -8,20 +8,24 @@ import java.util.Objects;
 @UtilityClass
 public class LocationEntityCoordinatesValidator {
 
-    public void validateLocationCoordinatesEntity(String latitude, String longitude) {
-        isLatitudeNotNullOrEmpty(latitude);
-        isLongitudeNotNullOrEmpty(longitude);
+    public void validateLocationCoordinates(String latitude, String longitude) {
+        isLatitudeOrLongitudeNotNull(latitude, longitude);
+        isLongitudeOrLatitudeNotEmpty(latitude, longitude);
     }
 
-    private void isLatitudeNotNullOrEmpty(String latitude) {
-        if (Objects.isNull(latitude) || latitude.trim().isEmpty()) {
-            throw new LocationEntityException("latitude is null or empty" );
+    private void isLatitudeOrLongitudeNotNull(String latitude, String longitude) {
+        if (Objects.equals(latitude, null) || Objects.equals(longitude, null)) {
+            throw new LocationEntityException
+                    ("Latitude " + (latitude == null ? "is null" : "is not null") +
+                            " and Longitude " + (longitude == null ? "is null" : "is not null"));
         }
     }
 
-    private void isLongitudeNotNullOrEmpty(String longitude) {
-        if (Objects.isNull(longitude) || longitude.trim().isEmpty()) {
-            throw new LocationEntityException("longitude is null or empty" );
+    private void isLongitudeOrLatitudeNotEmpty(String latitude, String longitude) {
+        if (latitude.isBlank() || longitude.isBlank()) {
+            throw new LocationEntityException
+                    ("Latitude " + (latitude.isBlank() ? "is blank" : "is not blank") +
+                    " and Longitude " + (longitude.isBlank() ? "is blank" : "is not blank"));
         }
     }
 

@@ -60,10 +60,10 @@ class GoogleApiResponseValidatorTest {
     @ParameterizedTest
     @MethodSource(value = "provideStatusValuesWithoutOk")
     void shouldThrowGoogleCommunicationExceptionWhenStatusIsNotOk(GoogleApiGeocodingStatus status) {
-        //GIVEN
+        //GIVEN & WHEN
         body = createFullMockGoogleResponse(status);
 
-        //WHEN & THEN
+        //THEN
         assertThrows(GoogleCommunicationException.class,
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
         assertThatThrownBy(
@@ -74,10 +74,10 @@ class GoogleApiResponseValidatorTest {
 
     @Test
     void shouldThrowGoogleCommunicationExceptionWhenBodyIsNull() {
-        //GIVEN
+        //GIVEN & WHEN
         body = null;
 
-        //WHEN & THEN
+        //THEN
         assertThrows(GoogleCommunicationException.class,
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
         assertThatThrownBy(
@@ -88,7 +88,7 @@ class GoogleApiResponseValidatorTest {
 
     @Test
     void shouldThrowGoogleCommunicationExceptionWhenResultsAreEmpty() {
-        //GIVEN @WHEN
+        //GIVEN & WHEN
         Mockito.when(body.getResults()).thenReturn(new ArrayList<>());
 
         //THEN
