@@ -1,12 +1,10 @@
 package com.javafee.java.lessons.tasks.task2googleapi.entity;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@SpringBootTest
-@Transactional
+@DataJpaTest
 abstract class EntityTest {
 
     @Autowired

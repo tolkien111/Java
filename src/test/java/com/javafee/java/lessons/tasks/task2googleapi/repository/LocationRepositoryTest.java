@@ -1,16 +1,14 @@
 package com.javafee.java.lessons.tasks.task2googleapi.repository;
 
 import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@Transactional
+@DataJpaTest
 class LocationRepositoryTest {
 
     @Autowired

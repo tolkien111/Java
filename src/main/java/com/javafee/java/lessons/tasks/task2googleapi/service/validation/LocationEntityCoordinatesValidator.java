@@ -25,8 +25,7 @@ public class LocationEntityCoordinatesValidator {
         if (latitude.isBlank() || longitude.isBlank()) {
             throw new LocationEntityException
                     ("Latitude " + (latitude.isBlank() ? "is blank" : "is not blank") +
-                    " and Longitude " + (longitude.isBlank() ? "is blank" : "is not blank"));
+                            " and Longitude " + (longitude.isBlank() ? "is blank" : "is not blank"));
         }
     }
-
 }

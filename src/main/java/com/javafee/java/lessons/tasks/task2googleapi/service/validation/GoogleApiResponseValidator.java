@@ -4,6 +4,7 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationp
 import com.javafee.java.lessons.tasks.task2googleapi.service.exception.GoogleCommunicationException;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.enums.GoogleApiGeocodingStatus;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class GoogleApiResponseValidator {
         validateStatus(body);
     }
 
-    private void validateStatus(GoogleResponse body) {
+    private void validateStatus(@NotNull GoogleResponse body) {
         if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) != GoogleApiGeocodingStatus.OK)
             throw new GoogleCommunicationException("Error while communicating with Google API, status: " + body.getStatus());
     }

@@ -13,7 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,12 +21,11 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class GoogleApiResponseValidatorTest {
 
     @Mock
-    GoogleResponse body;
+    private GoogleResponse body;
 
     static String locationQueryString = "Dworzec Główny Gdańsk";
 
@@ -69,7 +67,7 @@ class GoogleApiResponseValidatorTest {
         assertThatThrownBy(
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
-                .hasMessageContaining("Error while communicating with Google API, status: ");
+                .hasMessageContaining("Error while communicating with Google API, status: " + body.getStatus());
     }
 
     @Test
