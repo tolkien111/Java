@@ -28,12 +28,12 @@ class GoogleApiResponseValidatorTest {
     @Mock
     private GoogleResponse body;
 
-    static String locationQueryString = "Dworzec Główny Gdańsk";
+    static String locationQueryString = "Eiffel Tower Paris";
 
-    private static Stream<GoogleApiGeocodingStatus> provideStatusValuesWithoutOk() {
+    private static Stream<GoogleApiGeocodingStatus> provideStatusValuesWithoutOkAndRequestDenied() {
         return Arrays.stream(GoogleApiGeocodingStatus.values())
                 .skip(1)
-                .limit(4);
+                .limit(3);
     }
 
     @NotNull
@@ -55,21 +55,6 @@ class GoogleApiResponseValidatorTest {
         Mockito.lenient().when(body.getResults()).thenReturn(results);
         Mockito.when(body.getStatus()).thenReturn(status.name());
         return body;
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = "provideStatusValuesWithoutOk")
-    void shouldThrowGoogleCommunicationExceptionWhenStatusIsNotOk(GoogleApiGeocodingStatus status) {
-        //GIVEN & WHEN
-        body = createFullMockGoogleResponse(status);
-
-        //THEN
-        assertThrows(GoogleCommunicationException.class,
-                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
-        assertThatThrownBy(
-                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
-                .isInstanceOf(GoogleCommunicationException.class)
-                .hasMessageContaining("Error while communicating with Google API, status: " + body.getStatus());
     }
 
     @Test
@@ -98,5 +83,33 @@ class GoogleApiResponseValidatorTest {
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
                 .hasMessageContaining("Google API returned no results for the query: " + locationQueryString);
+    }
+    @Test
+    void shouldThrowGoogleCommunicationExceptionWhenStatusIsRequestDenied() {
+        //GIVEN & WHEN
+        body = createFullMockGoogleResponse(GoogleApiGeocodingStatus.REQUEST_DENIED);
+
+        //THEN
+        assertThrows(GoogleCommunicationException.class,
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
+        assertThatThrownBy(
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
+                .isInstanceOf(GoogleCommunicationException.class)
+                .hasMessageContaining("Access not approved: incorrect google api key");
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "provideStatusValuesWithoutOkAndRequestDenied")
+    void shouldThrowGoogleCommunicationExceptionWhenStatusIsNotOkAndRequestDenied(GoogleApiGeocodingStatus status) {
+        //GIVEN & WHEN
+        body = createFullMockGoogleResponse(status);
+
+        //THEN
+        assertThrows(GoogleCommunicationException.class,
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
+        assertThatThrownBy(
+                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
+                .isInstanceOf(GoogleCommunicationException.class)
+                .hasMessageContaining("Error while communicating with Google API, status: " + body.getStatus());
     }
 }
