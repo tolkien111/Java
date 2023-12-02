@@ -25,17 +25,17 @@ class LocationEntityCoordinatesValidatorTest {
 
     @NotNull
     private static GoogleResponse createFullMockGoogleResponse(String latitude, String longitude) {
-        var mockLocation = Mockito.mock(Location.class);
+        final var mockLocation = Mockito.mock(Location.class);
         Mockito.lenient().when(mockLocation.getLat()).thenReturn(latitude);
         Mockito.lenient().when(mockLocation.getLng()).thenReturn(longitude);
 
-        var mockGeometry = Mockito.mock(Geometry.class);
+        final var mockGeometry = Mockito.mock(Geometry.class);
         Mockito.lenient().when(mockGeometry.getLocation()).thenReturn(mockLocation);
 
-        var mockResult = Mockito.mock(Result.class);
+        final var mockResult = Mockito.mock(Result.class);
         Mockito.lenient().when(mockResult.getGeometry()).thenReturn(mockGeometry);
 
-        var results = new ArrayList<Result>();
+        final var results = new ArrayList<Result>();
         results.add(mockResult);
 
         var body = Mockito.mock(GoogleResponse.class);
@@ -44,26 +44,41 @@ class LocationEntityCoordinatesValidatorTest {
         return body;
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            ", 0",
+            "0,",
+            ","
+    })
+    void shouldThrowExceptionWhenLatitudeOrLongitudeIsNull(String latitude, String longitude) {
+        //GIVEN & WHEN
+        body = createFullMockGoogleResponse(latitude, longitude);
+        //THEN
+        Assertions.assertThatThrownBy(
+                        () -> LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude))
+                .isInstanceOf(LocationEntityException.class)
+                .hasMessageContaining(
+                        "Latitude " + (latitude == null ? "is null" : "is not null") +
+                                " and Longitude " + (longitude == null ? "is null" : "is not null"));
+
+    }
 
     @ParameterizedTest
     @CsvSource({
-            "NULL, 0",
-            "0, NULL",
-            "NULL, NULL"
+            "' ', 0",
+            "0,' '",
+            "' ',' '"
     })
     void shouldThrowExceptionWhenLatitudeIsNull(String latitude, String longitude) {
         //GIVEN & WHEN
-        var lat = "NULL".equals(latitude) ? null : latitude;
-        var lng = "NULL".equals(longitude) ? null : latitude;
-
-        body = createFullMockGoogleResponse(lat, lng);
-
+        body = createFullMockGoogleResponse(latitude, longitude);
+        //THEN
         Assertions.assertThatThrownBy(
-                        () -> LocationEntityCoordinatesValidator.validateLocationCoordinates(lat, lng))
+                        () -> LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude))
                 .isInstanceOf(LocationEntityException.class)
                 .hasMessageContaining(
-                        "Latitude " + (lat == null ? "is null" : "is not null") +
-                                " and Longitude " + (lng == null ? "is null" : "is not null"));
+                        "Latitude " + (latitude.trim().isEmpty() ? "is empty" : "is not empty") +
+                                " and Longitude " + (longitude.trim().isEmpty() ? "is empty" : "is not empty"));
 
     }
 

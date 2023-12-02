@@ -6,6 +6,7 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationp
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.Result;
 import com.javafee.java.lessons.tasks.task2googleapi.service.exception.GoogleCommunicationException;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.enums.GoogleApiGeocodingStatus;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,21 +36,22 @@ class GoogleApiResponseValidatorTest {
                 .limit(4);
     }
 
-    private static GoogleResponse createFullMockGoogleResponse(GoogleApiGeocodingStatus status) {
-        var mockLocation = Mockito.mock(Location.class);
+    @NotNull
+    private static GoogleResponse createFullMockGoogleResponse(@NotNull GoogleApiGeocodingStatus status) {
+        final var mockLocation = Mockito.mock(Location.class);
         Mockito.lenient().when(mockLocation.getLat()).thenReturn("0");
         Mockito.lenient().when(mockLocation.getLng()).thenReturn("0");
 
-        var mockGeometry = Mockito.mock(Geometry.class);
+        final var mockGeometry = Mockito.mock(Geometry.class);
         Mockito.lenient().when(mockGeometry.getLocation()).thenReturn(mockLocation);
 
-        var mockResult = Mockito.mock(Result.class);
+        final var mockResult = Mockito.mock(Result.class);
         Mockito.lenient().when(mockResult.getGeometry()).thenReturn(mockGeometry);
 
-        var results = new ArrayList<Result>();
+        final var results = new ArrayList<Result>();
         results.add(mockResult);
 
-        var body = Mockito.mock(GoogleResponse.class);
+        final var body = Mockito.mock(GoogleResponse.class);
         Mockito.lenient().when(body.getResults()).thenReturn(results);
         Mockito.when(body.getStatus()).thenReturn(status.name());
         return body;
@@ -81,7 +83,7 @@ class GoogleApiResponseValidatorTest {
         assertThatThrownBy(
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
-                .hasMessageContaining("Google API returned no results for the query: ");
+                .hasMessageContaining("Google API returned no results for the query: " + locationQueryString);
     }
 
     @Test
@@ -95,6 +97,6 @@ class GoogleApiResponseValidatorTest {
         assertThatThrownBy(
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
-                .hasMessageContaining("Google API returned no results for the query: ");
+                .hasMessageContaining("Google API returned no results for the query: " + locationQueryString);
     }
 }
