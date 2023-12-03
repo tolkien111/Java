@@ -18,7 +18,7 @@ public class GoogleApiResponseValidator {
     }
 
     private void validateNotEmptyOrNotNullResults(GoogleResponse body, String locationQueryString) {
-        if (Objects.equals(body, null) || body.getResults().isEmpty())
+        if (Objects.isNull(body) || body.getResults().isEmpty())
             throw new GoogleCommunicationException("Google API returned no results for the query: " + locationQueryString);
     }
 

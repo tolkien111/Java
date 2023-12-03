@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class GoogleApiResponseValidatorTest {
@@ -63,8 +62,6 @@ class GoogleApiResponseValidatorTest {
         body = null;
 
         //THEN
-        assertThrows(GoogleCommunicationException.class,
-                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
         assertThatThrownBy(
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
@@ -77,8 +74,6 @@ class GoogleApiResponseValidatorTest {
         Mockito.when(body.getResults()).thenReturn(new ArrayList<>());
 
         //THEN
-        assertThrows(GoogleCommunicationException.class,
-                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
         assertThatThrownBy(
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
@@ -90,8 +85,6 @@ class GoogleApiResponseValidatorTest {
         body = createFullMockGoogleResponse(GoogleApiGeocodingStatus.REQUEST_DENIED);
 
         //THEN
-        assertThrows(GoogleCommunicationException.class,
-                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
         assertThatThrownBy(
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
@@ -105,8 +98,6 @@ class GoogleApiResponseValidatorTest {
         body = createFullMockGoogleResponse(status);
 
         //THEN
-        assertThrows(GoogleCommunicationException.class,
-                () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString));
         assertThatThrownBy(
                 () -> GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString))
                 .isInstanceOf(GoogleCommunicationException.class)
