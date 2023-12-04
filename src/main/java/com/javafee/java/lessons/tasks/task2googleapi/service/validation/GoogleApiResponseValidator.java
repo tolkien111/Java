@@ -22,7 +22,7 @@ public class GoogleApiResponseValidator {
             throw new GoogleCommunicationException("Google API returned no results for the query: " + locationQueryString);
     }
 
-    private void validateAccess(GoogleResponse body){
+    private void validateAccess(@NotNull GoogleResponse body){
         if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) == GoogleApiGeocodingStatus.REQUEST_DENIED)
             throw new GoogleCommunicationException("Access not approved: incorrect google api key");
     }
