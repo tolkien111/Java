@@ -17,3 +17,7 @@ Feature: Geo location API
     When the client requests the location data
     Then the client should receives an error indicating a problem with location query string
 
+  Scenario: Retrieve location data when location coordinates are not able to read
+    Given the client has location query for "Champ de Mars, 75007 Paris"
+    When the client requests the location data and coordinates are empty
+    Then the client should receives an error indicating a problem with location query coordinates

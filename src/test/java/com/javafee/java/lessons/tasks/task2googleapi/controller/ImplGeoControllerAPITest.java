@@ -25,6 +25,11 @@ public class ImplGeoControllerAPITest extends CucumberSpringConfiguration {
                 CustomExceptionDto.class);
     }
 
+    @When("the client requests the location data and coordinates are empty")
+    public void the_client_requests_the_location_data_and_coordinates_are_empty() {
+        //TODO prepare response mock for test and exceptionResponse
+    }
+
     @Then("the client should receives coordinates {string} and {string}")
     public void the_client_should_receive_coordinates_for_address(String latitude, String longitude) {
         assertEquals(Objects.requireNonNull(response.getBody()).getLatitude(), latitude);
@@ -43,5 +48,10 @@ public class ImplGeoControllerAPITest extends CucumberSpringConfiguration {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertTrue(Objects.requireNonNull(exceptionResponse.getBody()).getMessage()
                 .contains("locationQueryString contains forbidden character: %"));
+    }
+
+    @Then("the client should receives an error indicating a problem with location query coordinates")
+    public void the_client_should_receives_an_error_indicating_a_problem_with_location_query_coordinates() {
+        //TODO prepare assertions
     }
 }

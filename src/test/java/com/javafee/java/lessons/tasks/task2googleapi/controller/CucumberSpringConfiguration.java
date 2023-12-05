@@ -17,5 +17,4 @@ public class CucumberSpringConfiguration {
     protected String locationQueryString;
     protected ResponseEntity<LocationView> response;
     protected ResponseEntity<CustomExceptionDto> exceptionResponse;
-
 }

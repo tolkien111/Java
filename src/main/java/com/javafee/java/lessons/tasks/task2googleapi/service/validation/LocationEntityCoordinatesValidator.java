@@ -14,10 +14,10 @@ public class LocationEntityCoordinatesValidator {
     }
 
     private void isLatitudeOrLongitudeNotNull(String latitude, String longitude) {
-        if (Objects.equals(latitude, null) || Objects.equals(longitude, null)) {
+        if (Objects.isNull(latitude) || Objects.isNull(longitude)) {
             throw new LocationEntityException
-                    ("Latitude " + (latitude == null ? "is null" : "is not null") +
-                            " and Longitude " + (longitude == null ? "is null" : "is not null"));
+                    ("Latitude " + (Objects.isNull(latitude) ? "is null" : "is not null") +
+                            " and Longitude " + (Objects.isNull(longitude) ? "is null" : "is not null"));
         }
     }
 
