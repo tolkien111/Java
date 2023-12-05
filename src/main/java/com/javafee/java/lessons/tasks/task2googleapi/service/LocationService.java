@@ -7,6 +7,7 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.Locati
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.GoogleApiResponseValidator;
+import com.javafee.java.lessons.tasks.task2googleapi.service.validation.LocationEntityCoordinatesValidator;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.LocationQueryStringValidator;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -40,6 +41,7 @@ public class LocationService {
         GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString);
         String latitude = body.getResults().get(0).getGeometry().getLocation().getLat(),
                 longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
+        LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude);
         if (repository.locationExists(latitude, longitude))
             return mapper.entityToView(repository.readLocation(latitude, longitude));
         repository.save(createLocationEntity(body, latitude, longitude));
