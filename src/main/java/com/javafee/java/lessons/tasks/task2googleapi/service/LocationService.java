@@ -15,10 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -51,7 +47,7 @@ public class LocationService {
     }
 
     private String createGoogleApiUrl(String locationQueryString) {
-        return googleApiUrl + URLEncoder.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKeys;
+        return googleApiUrl + locationQueryString + "&key=" + googleApiKeys;
     }
 
     private GoogleResponse getGoogleResponseBody(String locationQueryString) {
