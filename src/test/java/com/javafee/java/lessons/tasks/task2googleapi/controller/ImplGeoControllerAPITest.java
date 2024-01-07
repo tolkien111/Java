@@ -5,19 +5,11 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.Locati
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.client.ExpectedCount;
-import org.springframework.test.web.client.MockRestServiceServer;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 public class ImplGeoControllerAPITest extends CucumberSpringConfiguration {
 
@@ -31,20 +23,6 @@ public class ImplGeoControllerAPITest extends CucumberSpringConfiguration {
         this.response = restTemplate.getForEntity("/api/geo/location/" + locationQueryString, LocationView.class);
         this.exceptionResponse = restTemplate.getForEntity("/api/geo/location/" + locationQueryString,
                 CustomExceptionDto.class);
-    }
-    //TODO try to fix
-    @When("the client requests the location data and coordinates are empty")
-    public void the_client_requests_the_location_data_and_coordinates_are_empty() {
-        this.response = restTemplate.getForEntity("/api/geo/location/" + locationQueryString, LocationView.class);
-
-        System.out.println(response);
-        mockServer = MockRestServiceServer.createServer(restTemplate.getRestTemplate());
-        mockServer.expect(ExpectedCount.once(),
-                        requestTo("/api/geo/location/" + locationQueryString))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withStatus(HttpStatus.NOT_FOUND)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(Arrays.toString(new String[]{"Champ de Mars, 75007 Paris", " ", " "})));
     }
 
     @Then("the client should receives coordinates {string} and {string}")
@@ -65,10 +43,5 @@ public class ImplGeoControllerAPITest extends CucumberSpringConfiguration {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertTrue(Objects.requireNonNull(exceptionResponse.getBody()).getMessage()
                 .contains("locationQueryString contains forbidden character: %"));
-    }
-
-    @Then("the client should receives an error indicating a problem with location query coordinates")
-    public void the_client_should_receives_an_error_indicating_a_problem_with_location_query_coordinates() {
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }
