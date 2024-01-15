@@ -1,0 +1,12 @@
+# Build stage for the application
+FROM maven:3.8.1-openjdk-17 AS build
+WORKDIR /address_searcher_app/build
+COPY src /address_searcher_app/build/src
+COPY pom.xml /address_searcher_app/build
+RUN mvn clean package -DskipTests  # Execute the Maven project build command
+
+# Docker image creation stage
+FROM openjdk:17
+WORKDIR /address_searcher_app
+COPY --from=build /address_searcher_app/build/target/task2googleapi-0.0.1-SNAPSHOT.jar /address_searcher_app/app.jar
+CMD ["java", "-jar", "/address_searcher_app/app.jar"]
