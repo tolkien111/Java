@@ -2,6 +2,13 @@ version: '3.8'
 
 services:
   app:
+    container_name: addressSearcherApp
+    restart: on-failure
+    networks:
+      - db_network
+    env_file:
+      - googleapikey.env #Prepare your own file with data "GOOGLE_API_KEYS=your key" to run application
+                         #or use docker run --env GOOGLE_API_KEYS=your key
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,6 +19,9 @@ services:
 
   db:
     image: postgres:16.1
+    restart: on-failure
+    networks:
+      - db_network
     environment:
       POSTGRES_DB: googleapi
       POSTGRES_USER: postgres
@@ -24,6 +34,10 @@ services:
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  db_network:
+    driver: bridge
 
 
 

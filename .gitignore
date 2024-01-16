@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### .env for Docker Compose ###
+googleapikey.env
