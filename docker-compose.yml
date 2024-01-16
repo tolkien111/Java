@@ -7,7 +7,7 @@ services:
     networks:
       - db_network
     env_file:
-      - googleapikey.env #Prepare your own file with data "GOOGLE_API_KEYS=your key" to run application
+      - googleapikey.env #Prepare your googleapikey.env with data "GOOGLE_API_KEYS=your key" to run application
                          #or use docker run --env GOOGLE_API_KEYS=your key
     build:
       context: .
