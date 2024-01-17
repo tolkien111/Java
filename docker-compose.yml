@@ -18,12 +18,13 @@ services:
       - db
 
   db:
+    container_name: dockergoogleapidb
     image: postgres:16.1
     restart: on-failure
     networks:
       - db_network
     environment:
-      POSTGRES_DB: googleapi
+      POSTGRES_DB: dockergoogleapi
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin123
     ports:
@@ -38,7 +39,3 @@ volumes:
 networks:
   db_network:
     driver: bridge
-
-
-
-
