@@ -43,7 +43,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: "jdbc:postgresql://localhost:5432/googleapi"
+    url: "jdbc:postgresql://db:5432/googleapi"
     username: postgres
     password: admin123
     driver-class-name: org.postgresql.Driver

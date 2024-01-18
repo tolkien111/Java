@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     container_name: addressSearcherApp
-    restart: on-failure
+    restart: on-failure:1
     networks:
       - db_network
     env_file:
@@ -11,24 +11,26 @@ services:
                          #or use docker run --env GOOGLE_API_KEYS=your key
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile2
     ports:
       - "8080:8080"
     depends_on:
       - db
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
 
   db:
     container_name: dockergoogleapidb
     image: postgres:16.1
-    restart: on-failure
+    restart: on-failure:1
     networks:
       - db_network
     environment:
-      POSTGRES_DB: dockergoogleapi
+      POSTGRES_DB: googleapi
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin123
     ports:
-      - "5432:5432"
+      - "5435:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
