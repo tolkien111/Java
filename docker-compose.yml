@@ -11,7 +11,7 @@ services:
                          #or use docker run --env GOOGLE_API_KEYS=your key
     build:
       context: .
-      dockerfile: Dockerfile2
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
