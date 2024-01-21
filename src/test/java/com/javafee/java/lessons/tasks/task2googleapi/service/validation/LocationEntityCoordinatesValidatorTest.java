@@ -81,47 +81,4 @@ class LocationEntityCoordinatesValidatorTest {
                                 " and Longitude " + (longitude.trim().isEmpty() ? "is empty" : "is not empty"));
 
     }
-
-    //TODO For consultation
-//    @Test
-//    void shouldThrowExceptionWhenLatitudeIsNull() {
-//        //GIVEN & WHEN
-//        body = createFullMockGoogleResponse(null, "0");
-//        var latitude = body.getResults().get(0).getGeometry().getLocation().getLat();
-//        var longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
-//
-//        //THEN
-//        Assertions.assertThatThrownBy(
-//                () -> LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude))
-//                .isInstanceOf(LocationEntityException.class)
-//                .hasMessageContaining("Latitude is null and Longitude is not null");
-//    }
-//
-//    @Test
-//    void shouldThrowExceptionWhenLongitudeIsNull() {
-//        //GIVEN & WHEN
-//        body = createFullMockGoogleResponse("0", null);
-//        var latitude = body.getResults().get(0).getGeometry().getLocation().getLat();
-//        var longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
-//
-//        //THEN
-//        Assertions.assertThatThrownBy(
-//                        () -> LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude))
-//                .isInstanceOf(LocationEntityException.class)
-//                .hasMessageContaining("Latitude is not null and Longitude is null");
-//    }
-//
-//    @Test
-//    void shouldThrowExceptionWhenLatitudeAndLongitudeIsNull() {
-//        //GIVEN & WHEN
-//        body = createFullMockGoogleResponse(null, null);
-//        var latitude = body.getResults().get(0).getGeometry().getLocation().getLat();
-//        var longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
-//
-//        //THEN
-//        Assertions.assertThatThrownBy(
-//                        () -> LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude))
-//                .isInstanceOf(LocationEntityException.class)
-//                .hasMessageContaining("Latitude is null and Longitude is null");
-//    }
 }
