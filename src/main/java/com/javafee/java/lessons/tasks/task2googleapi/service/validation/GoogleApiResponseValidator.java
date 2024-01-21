@@ -18,16 +18,16 @@ public class GoogleApiResponseValidator {
     }
 
     private void validateResultsNotEmpty(GoogleResponse body, String locationQueryString) {
-        if (Objects.isNull(body.getResults()) || body.getResults().isEmpty())
+        if (Objects.isNull(body))
             throw new GoogleCommunicationException("Google API returned no results for the query: " + locationQueryString);
     }
 
-    private void validateAccess(@NotNull GoogleResponse body){
+    private void validateAccess(GoogleResponse body){
         if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) == GoogleApiGeocodingStatus.REQUEST_DENIED)
             throw new GoogleCommunicationException("Access not approved: incorrect google api key");
     }
 
-    private void validateStatus(@NotNull GoogleResponse body) {
+    private void validateStatus(GoogleResponse body) {
         if (GoogleApiGeocodingStatus.valueOf(body.getStatus()) != GoogleApiGeocodingStatus.OK)
             throw new GoogleCommunicationException("Error while communicating with Google API, status: " + body.getStatus());
     }
