@@ -4,7 +4,6 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationp
 import com.javafee.java.lessons.tasks.task2googleapi.service.exception.GoogleCommunicationException;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.enums.GoogleApiGeocodingStatus;
 import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -18,7 +17,7 @@ public class GoogleApiResponseValidator {
     }
 
     private void validateResultsNotEmpty(GoogleResponse body, String locationQueryString) {
-        if (Objects.isNull(body))
+        if (Objects.isNull(body) || body.getResults().isEmpty())
             throw new GoogleCommunicationException("Google API returned no results for the query: " + locationQueryString);
     }
 
