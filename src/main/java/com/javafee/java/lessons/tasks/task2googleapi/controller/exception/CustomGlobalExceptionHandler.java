@@ -2,6 +2,7 @@ package com.javafee.java.lessons.tasks.task2googleapi.controller.exception;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.exception.CustomExceptionDto;
 import com.javafee.java.lessons.tasks.task2googleapi.service.exception.GoogleCommunicationException;
+import com.javafee.java.lessons.tasks.task2googleapi.service.exception.LocationEntityException;
 import com.javafee.java.lessons.tasks.task2googleapi.service.exception.LocationQueryStringException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         log.error("Location query string exception: {}", exception.getMessage());
         return new ResponseEntity<>(getExceptionDto(HttpStatus.BAD_REQUEST, exception.getMessage(), webRequest, request),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(LocationEntityException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<CustomExceptionDto> handleError(LocationEntityException exception, WebRequest webRequest,
+                                                          HttpServletRequest request) {
+        log.error("Location coordinates exception: {}", exception.getMessage());
+        return new ResponseEntity<>(getExceptionDto(HttpStatus.BAD_REQUEST, exception.getMessage(), webRequest, request),
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(GoogleCommunicationException.class)

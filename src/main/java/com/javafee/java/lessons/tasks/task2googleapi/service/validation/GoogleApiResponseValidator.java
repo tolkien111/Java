@@ -32,4 +32,3 @@ public class GoogleApiResponseValidator {
             throw new GoogleCommunicationException("Error while communicating with Google API, status: " + body.getStatus());
     }
 }
-
