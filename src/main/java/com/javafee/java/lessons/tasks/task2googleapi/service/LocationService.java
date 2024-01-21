@@ -7,6 +7,7 @@ import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.Locati
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.GoogleApiResponseValidator;
+import com.javafee.java.lessons.tasks.task2googleapi.service.validation.LocationEntityCoordinatesValidator;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.LocationQueryStringValidator;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -14,10 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Service
 @Transactional
@@ -44,6 +41,7 @@ public class LocationService {
         GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString);
         String latitude = body.getResults().get(0).getGeometry().getLocation().getLat(),
                 longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
+        LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude);
         if (repository.locationExists(latitude, longitude))
             return mapper.entityToView(repository.readLocation(latitude, longitude));
         repository.save(createLocationEntity(body, latitude, longitude));
@@ -51,7 +49,7 @@ public class LocationService {
     }
 
     private String createGoogleApiUrl(String locationQueryString) {
-        return googleApiUrl + URLEncoder.encode(locationQueryString, StandardCharsets.UTF_8) + "&key=" + googleApiKeys;
+        return googleApiUrl + locationQueryString + "&key=" + googleApiKeys;
     }
 
     private GoogleResponse getGoogleResponseBody(String locationQueryString) {

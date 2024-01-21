@@ -10,7 +10,7 @@ import java.util.Objects;
 @Component
 public class LocationQueryStringValidator {
 
-    @Value(value = "#{'${forbidden.characters}}'.split(',')}")
+    @Value(value = "#{'${forbidden.characters}'.split(',')}")
     private List<String> forbiddenCharacters;
 
     @Value(value = "${max.address.length}")
