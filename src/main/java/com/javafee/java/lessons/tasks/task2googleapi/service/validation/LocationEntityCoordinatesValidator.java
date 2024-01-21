@@ -22,7 +22,7 @@ public class LocationEntityCoordinatesValidator {
     }
 
     private void isLongitudeOrLatitudeNotEmpty(String latitude, String longitude) {
-        if (latitude.trim().isEmpty() || longitude.trim().isEmpty()) {
+        if (latitude.isBlank() || longitude.isBlank()) {
             throw new LocationEntityException
                     ("Latitude " + (latitude.trim().isEmpty() ? "is empty" : "is not empty") +
                             " and Longitude " + (longitude.trim().isEmpty() ? "is empty" : "is not empty"));
