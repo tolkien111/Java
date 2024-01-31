@@ -5,7 +5,7 @@ server:
 google:
   api:
     url: "https://maps.googleapis.com/maps/api/geocode/json?address="
-    keys: "${GOOGLE_API_KEYS}"
+    keys: "${GOOGLE_API_KEY}"
     location-sample-query: "24 Cybernetyki 9 Warszawa PL"
 
 # Final values for query validation
