@@ -6,18 +6,16 @@ services:
     restart: on-failure:1
     networks:
       - db_network
-    env_file:
-      - googleapikey.env #Prepare your googleapikey.env with data "GOOGLE_API_KEYS=your key" to run application
-                         #or use docker run --env GOOGLE_API_KEYS=your key
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8089:8080"
     depends_on:
       - db
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE=docker
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
 
   db:
     container_name: dockergoogleapidb
