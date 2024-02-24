@@ -1,7 +1,7 @@
 package com.javafee.java.lessons.tasks.task2googleapi.controller;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.LocationService;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationResponseView;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ public class ImplGeoControllerAPI implements GeoControllerAPI {
     private final LocationService locationService;
 
     @Override
-    public ResponseEntity<LocationView> searchForLocation(String locationQueryString) {
+    public ResponseEntity<LocationResponseView> searchForLocation(String locationQueryString) {
         return ResponseEntity.ok(locationService.searchForLocation(locationQueryString));
     }
 }

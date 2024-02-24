@@ -1,9 +1,8 @@
 package com.javafee.java.lessons.tasks.task2googleapi.service;
 
-
 import com.javafee.java.lessons.tasks.task2googleapi.entity.LocationEntity;
 import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationResponseView;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.googlelocationpath.GoogleResponse;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
 import com.javafee.java.lessons.tasks.task2googleapi.service.validation.GoogleApiResponseValidator;
@@ -35,7 +34,7 @@ public class LocationService {
     @Value(value = "${google.api.keys}")
     private String googleApiKeys;
 
-    public LocationView searchForLocation(String locationQueryString) {
+    public LocationResponseView searchForLocation(String locationQueryString) {
         validator.validateLocalQueryString(locationQueryString);
         GoogleResponse body = getGoogleResponseBody(locationQueryString);
         GoogleApiResponseValidator.validateGoogleApiResponse(body, locationQueryString);
@@ -43,9 +42,9 @@ public class LocationService {
                 longitude = body.getResults().get(0).getGeometry().getLocation().getLng();
         LocationEntityCoordinatesValidator.validateLocationCoordinates(latitude, longitude);
         if (repository.locationExists(latitude, longitude))
-            return mapper.entityToView(repository.readLocation(latitude, longitude));
+            return new LocationResponseView(mapper.entityToView(repository.readLocation(latitude, longitude)));
         repository.save(createLocationEntity(body, latitude, longitude));
-        return mapper.entityToView(createLocationEntity(body, latitude, longitude));
+        return new LocationResponseView(mapper.entityToView(createLocationEntity(body, latitude, longitude)));
     }
 
     private String createGoogleApiUrl(String locationQueryString) {

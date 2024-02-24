@@ -1,7 +1,7 @@
 package com.javafee.java.lessons.tasks.task2googleapi.controller;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.exception.CustomExceptionDto;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationResponseView;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,15 +20,15 @@ public class ImplGeoControllerAPITest extends CucumberSpringConfiguration {
 
     @When("the client requests the location data")
     public void the_client_requests_the_location_data() {
-        this.response = restTemplate.getForEntity("/api/geo/location/" + locationQueryString, LocationView.class);
+        this.response = restTemplate.getForEntity("/api/geo/location/" + locationQueryString, LocationResponseView.class);
         this.exceptionResponse = restTemplate.getForEntity("/api/geo/location/" + locationQueryString,
                 CustomExceptionDto.class);
     }
 
     @Then("the client should receives coordinates {string} and {string}")
     public void the_client_should_receive_coordinates_for_address(String latitude, String longitude) {
-        assertEquals(Objects.requireNonNull(response.getBody()).getLatitude(), latitude);
-        assertEquals(Objects.requireNonNull(response.getBody()).getLongitude(), longitude);
+        assertEquals(Objects.requireNonNull(response.getBody()).getLocationView().getLatitude(), latitude);
+        assertEquals(Objects.requireNonNull(response.getBody()).getLocationView().getLongitude(), longitude);
     }
 
     @Then("the client should receives an error indicating a problem with Google API")

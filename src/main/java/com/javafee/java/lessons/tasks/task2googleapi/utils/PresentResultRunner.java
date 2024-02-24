@@ -1,7 +1,7 @@
 package com.javafee.java.lessons.tasks.task2googleapi.utils;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.LocationService;
-import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationView;
+import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationResponseView;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class PresentResultRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        LocationView locationView = locationService.searchForLocation(locationQueryString);
+        LocationResponseView locationView = locationService.searchForLocation(locationQueryString);
         log.info(String.valueOf(locationView));
     }
 }
