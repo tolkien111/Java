@@ -22,11 +22,11 @@ public class LocationServicePyLevenshtein {
     @NonNull
     private final LocationService locationService;
     @NotNull
-    private final PyLevenshteinService pyLevenshteinService;
+    private final PyLevenshteinSimilaritySearcherService pyLevenshteinSimilaritySearcherService;
 
     public LocationResponseView searchForLocations(String locationQueryString) {
         validator.validateLocalQueryString(locationQueryString);
-        List<LocationIdView> similarLocations = pyLevenshteinService.searchSimilarLocations(locationQueryString);
+        List<LocationIdView> similarLocations = pyLevenshteinSimilaritySearcherService.searchSimilarLocations(locationQueryString);
         if (!similarLocations.isEmpty() && similarLocations.size() > 1) {
             return new LocationResponseView(similarLocations);
         } else {

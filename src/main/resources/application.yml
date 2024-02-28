@@ -15,6 +15,10 @@ max:
   address:
     length: 280
 
+#For UUID sample
+sample:
+  id: "38400000-8cf0-11bd-b23e-10b96e4ef00d"
+
 ---
 spring:
   config:

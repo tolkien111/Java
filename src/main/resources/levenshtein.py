@@ -2,7 +2,7 @@ import sys
 from Levenshtein import distance
 
 
-def is_similar(str1, str2, threshold=5):
+def is_similar(str1, str2, threshold=3):
     return distance(str1, str2) <= threshold
 
 

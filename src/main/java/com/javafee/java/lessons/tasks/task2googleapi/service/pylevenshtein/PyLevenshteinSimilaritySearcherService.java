@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -20,33 +21,51 @@ import java.util.logging.Logger;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PyLevenshteinService {
+public class PyLevenshteinSimilaritySearcherService {
 
     @NonNull
     private final LocationRepository repository;
     @NotNull
     private final LocationMapper mapper;
+    @Value("${sample.id}")
+    private String sampleId;
 
     public List<LocationIdView> searchSimilarLocations(String locationQueryString) {
         List<LocationIdView> candidateLocations = new ArrayList<>(repository.readAllLocations().stream()
                 .map(mapper::entityToIdView)
                 .filter(location -> isSimilar(locationQueryString, location.getAddressDescription()))
                 .toList());
-
-        if(!candidateLocations.isEmpty()){
-            candidateLocations.add(new LocationIdView(UUID.randomUUID(),
-                    "I did not found my location on the list"));
-        }
+        isNotEmptyList(candidateLocations);
         return candidateLocations;
     }
 
+    private void isNotEmptyList(List<LocationIdView> candidateLocations) {
+        if (!candidateLocations.isEmpty()) {
+            candidateLocations.add(createNotFoundOption());
+        }
+    }
+
+    @NotNull
+    private LocationIdView createNotFoundOption() {
+        return new LocationIdView(UUID.fromString(sampleId),
+                "I did not found my location on the list");
+    }
+
     private boolean isSimilar(String locationQueryString, String existingAddressDescription) {
-        ProcessBuilder processBuilder = new ProcessBuilder("python",
+        ProcessBuilder processBuilder = getProcessBuilder(locationQueryString, existingAddressDescription);
+        processBuilder.redirectErrorStream(true);
+        return stringsAreSimilar(processBuilder);
+    }
+
+    @NotNull
+    private static ProcessBuilder getProcessBuilder(String locationQueryString, String existingAddressDescription) {
+        return new ProcessBuilder("python",
                 "C:\\Users\\kamil\\git\\Java\\src\\main\\resources\\levenshtein.py",
                 locationQueryString,
-                existingAddressDescription); //TODO only for me, change for use on all computers
-        processBuilder.redirectErrorStream(true);
+                existingAddressDescription); //TODO only for me, change to use on all desktops
+    }
 
+    private static boolean stringsAreSimilar(ProcessBuilder processBuilder) {
         try {
             Process process = processBuilder.start();
 
@@ -56,7 +75,6 @@ public class PyLevenshteinService {
                 return Boolean.parseBoolean(result);
             }
         } catch (IOException e) {
-            // Obsługa IOException
             Logger.getLogger("File not found");
             e.printStackTrace(); //to improve
             return false;

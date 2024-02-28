@@ -18,4 +18,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, UUID> 
 
     @Query("FROM LocationEntity l ORDER BY l.addressDescription")
     List<LocationEntity> readAllLocations();
+
+    @Query("FROM LocationEntity l WHERE l.id = ?1")
+    LocationEntity searchById (UUID id);
 }
