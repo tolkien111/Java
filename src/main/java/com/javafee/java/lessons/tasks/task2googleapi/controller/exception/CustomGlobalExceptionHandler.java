@@ -34,7 +34,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<CustomExceptionDto> handleError(LocationEntityException exception, WebRequest webRequest,
                                                           HttpServletRequest request) {
         log.error("Location coordinates exception: {}", exception.getMessage());
-        return new ResponseEntity<>(getExceptionDto(HttpStatus.BAD_REQUEST, exception.getMessage(), webRequest, request),
+        return new ResponseEntity<>(getExceptionDto(HttpStatus.NOT_FOUND, exception.getMessage(), webRequest, request),
                 HttpStatus.NOT_FOUND);
     }
 

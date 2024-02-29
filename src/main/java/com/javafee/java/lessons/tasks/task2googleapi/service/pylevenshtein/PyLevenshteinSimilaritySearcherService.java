@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,24 +49,23 @@ public class PyLevenshteinSimilaritySearcherService {
     @NotNull
     private LocationIdView createNotFoundOption() {
         return new LocationIdView(UUID.fromString(sampleId),
-                "I did not found my location on the list");
+                "The location was not found on the list");
     }
 
     private boolean isSimilar(String locationQueryString, String existingAddressDescription) {
         ProcessBuilder processBuilder = getProcessBuilder(locationQueryString, existingAddressDescription);
         processBuilder.redirectErrorStream(true);
-        return stringsAreSimilar(processBuilder);
+        return checkStringsSimilarityInPythonScript(processBuilder);
     }
 
     @NotNull
     private static ProcessBuilder getProcessBuilder(String locationQueryString, String existingAddressDescription) {
-        return new ProcessBuilder("python",
-                "C:\\Users\\kamil\\git\\Java\\src\\main\\resources\\levenshtein.py",
-                locationQueryString,
-                existingAddressDescription); //TODO only for me, change to use on all desktops
+        String basePath = Paths.get("").toAbsolutePath().toString(); // is okey??
+        String scriptPath = Paths.get(basePath, "src", "main", "resources", "levenshtein.py").toString(); // is okey?
+        return new ProcessBuilder("python", scriptPath, locationQueryString, existingAddressDescription);
     }
 
-    private static boolean stringsAreSimilar(ProcessBuilder processBuilder) {
+    private static boolean checkStringsSimilarityInPythonScript(ProcessBuilder processBuilder) {
         try {
             Process process = processBuilder.start();
 

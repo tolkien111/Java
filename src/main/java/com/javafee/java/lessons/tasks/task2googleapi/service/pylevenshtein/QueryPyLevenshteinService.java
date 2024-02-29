@@ -32,10 +32,9 @@ public class QueryPyLevenshteinService {
     public LocationResponseView getLocationResponseView(UUID id, HttpSession session) {
         if (Objects.equals(id.toString(), sampleId)) {
             String locationQueryStringSession = (String) session.getAttribute("locationQueryString");
-            session.removeAttribute("locationQueryString");//user can use only one time LQS, for one click
+            session.invalidate();//user can use only one time LQS, for one click
             return locationService.searchForLocation((locationQueryStringSession));
         }
-        session.invalidate(); //we need session no more
         return new LocationResponseView(mapper.entityToView(repository.searchById(id)));
     }
 }

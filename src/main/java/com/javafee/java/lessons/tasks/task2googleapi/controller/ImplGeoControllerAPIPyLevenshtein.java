@@ -32,6 +32,6 @@ public class ImplGeoControllerAPIPyLevenshtein implements GeoControllerAPI {
     @Override
     @GetMapping("v1/location/select/{id}")
     public ResponseEntity<LocationResponseView> selectLocation(@PathVariable UUID id, HttpSession session) {
-        return ResponseEntity.ok(query.getLocationResponseView(id,session));
+        return ResponseEntity.ok(query.getLocationResponseView(id, session));
     }
 }

@@ -27,6 +27,11 @@ public class LocationServicePyLevenshtein {
     public LocationResponseView searchForLocations(String locationQueryString) {
         validator.validateLocalQueryString(locationQueryString);
         List<LocationIdView> similarLocations = pyLevenshteinSimilaritySearcherService.searchSimilarLocations(locationQueryString);
+        return getLocationResponseView(locationQueryString, similarLocations);
+    }
+
+    @NotNull
+    private LocationResponseView getLocationResponseView(String locationQueryString, List<LocationIdView> similarLocations) {
         if (!similarLocations.isEmpty() && similarLocations.size() > 1) {
             return new LocationResponseView(similarLocations);
         } else {
