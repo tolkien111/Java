@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: addressSearcherApp
+    restart: on-failure:1
+    networks:
+      - db_network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+
+  db:
+    container_name: dockergoogleapidb
+    image: postgres:16.1
+    restart: on-failure:1
+    networks:
+      - db_network
+    environment:
+      POSTGRES_DB: googleapi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  db_network:
+    driver: bridge
