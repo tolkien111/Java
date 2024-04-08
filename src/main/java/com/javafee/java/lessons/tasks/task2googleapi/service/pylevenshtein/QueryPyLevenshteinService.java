@@ -35,6 +35,7 @@ public class QueryPyLevenshteinService {
             session.invalidate();//user can use only one time LQS, for one click
             return locationService.searchForLocation((locationQueryStringSession));
         }
+        session.invalidate();
         return new LocationResponseView(mapper.entityToView(repository.searchById(id)));
     }
 }

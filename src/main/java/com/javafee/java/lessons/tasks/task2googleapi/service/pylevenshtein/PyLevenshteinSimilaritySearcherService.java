@@ -61,8 +61,9 @@ public class PyLevenshteinSimilaritySearcherService {
     @NotNull
     private static ProcessBuilder getProcessBuilder(String locationQueryString, String existingAddressDescription) {
         String basePath = Paths.get("").toAbsolutePath().toString(); // is okey??
-        String scriptPath = Paths.get(basePath, "src", "main", "resources", "levenshtein.py").toString(); // is okey?
+        String scriptPath = Paths.get(basePath, "src", "main", "resources", "levenshtein.py").toString(); // put into application.yml
         return new ProcessBuilder("python", scriptPath, locationQueryString, existingAddressDescription);
+        // working DOCKER and archive JAR - next class
     }
 
     private static boolean checkStringsSimilarityInPythonScript(ProcessBuilder processBuilder) {
