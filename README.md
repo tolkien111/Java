@@ -5,5 +5,5 @@
 Put into environmet variabels:
 
 ```bash
-GOOGLE_API_KEY= # your key
+GOOGLE_API_KEY= # your Google Geocoding API key
 
