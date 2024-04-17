@@ -25,7 +25,7 @@ public class ImplGeoControllerAPIPyLevenshtein implements GeoControllerAPI {
     @Override
     @GetMapping("v1/location/{locationQueryString}")
     public ResponseEntity<LocationResponseView> searchForLocation(@PathVariable String locationQueryString, HttpSession session) {
-        session.setAttribute("locationQueryString", locationQueryString);
+        session.setAttribute("locationQueryString", locationQueryString); //use a cache instead of http session
         return ResponseEntity.ok(locationServicePyLevenshtein.searchForLocations(locationQueryString));
     }
 
