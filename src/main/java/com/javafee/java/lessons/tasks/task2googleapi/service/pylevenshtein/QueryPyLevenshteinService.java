@@ -1,7 +1,7 @@
 package com.javafee.java.lessons.tasks.task2googleapi.service.pylevenshtein;
 
 import com.javafee.java.lessons.tasks.task2googleapi.repository.LocationRepository;
-import com.javafee.java.lessons.tasks.task2googleapi.service.LocationService;
+import com.javafee.java.lessons.tasks.task2googleapi.service.LocationServiceImpl;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationResponseView;
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.mapper.LocationMapper;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class QueryPyLevenshteinService {
 
     @NonNull
-    private final LocationService locationService;
+    private final LocationServiceImpl locationServiceImpl;
     @NonNull
     private final LocationRepository repository;
     @NotNull
@@ -33,7 +33,7 @@ public class QueryPyLevenshteinService {
         if (Objects.equals(id.toString(), sampleId)) {
             String locationQueryStringSession = (String) session.getAttribute("locationQueryString");
             session.invalidate();//user can use only one time LQS, for one click
-            return locationService.searchForLocation((locationQueryStringSession));
+            return locationServiceImpl.searchForLocation((locationQueryStringSession));
         }
         session.invalidate();
         return new LocationResponseView(mapper.entityToView(repository.searchById(id)));

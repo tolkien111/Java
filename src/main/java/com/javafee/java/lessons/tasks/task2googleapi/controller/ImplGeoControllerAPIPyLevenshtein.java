@@ -1,7 +1,7 @@
 package com.javafee.java.lessons.tasks.task2googleapi.controller;
 
 import com.javafee.java.lessons.tasks.task2googleapi.service.dto.location.LocationResponseView;
-import com.javafee.java.lessons.tasks.task2googleapi.service.pylevenshtein.LocationServicePyLevenshtein;
+import com.javafee.java.lessons.tasks.task2googleapi.service.pylevenshtein.LocationServiceImplPyLevenshtein;
 import com.javafee.java.lessons.tasks.task2googleapi.service.pylevenshtein.QueryPyLevenshteinService;
 import jakarta.servlet.http.HttpSession;
 import lombok.NonNull;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class ImplGeoControllerAPIPyLevenshtein implements GeoControllerAPI {
 
     @NonNull
-    private final LocationServicePyLevenshtein locationServicePyLevenshtein;
+    private final LocationServiceImplPyLevenshtein locationServiceImplPyLevenshtein;
     @NonNull
     private QueryPyLevenshteinService query;
 
@@ -26,7 +26,7 @@ public class ImplGeoControllerAPIPyLevenshtein implements GeoControllerAPI {
     @GetMapping("v1/location/{locationQueryString}")
     public ResponseEntity<LocationResponseView> searchForLocation(@PathVariable String locationQueryString, HttpSession session) {
         session.setAttribute("locationQueryString", locationQueryString); //use a cache instead of http session
-        return ResponseEntity.ok(locationServicePyLevenshtein.searchForLocations(locationQueryString));
+        return ResponseEntity.ok(locationServiceImplPyLevenshtein.searchForLocation(locationQueryString));
     }
 
     @Override
